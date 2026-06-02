@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" role="img" aria-label="织梦师 Logo">
+  <defs>
+    <linearGradient id="core" x1="18" y1="18" x2="78" y2="78">
+      <stop offset="0" stop-color="#18f5c8"/>
+      <stop offset="0.52" stop-color="#78a7ff"/>
+      <stop offset="1" stop-color="#8f5cff"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="48" y1="8" x2="48" y2="88">
+      <stop offset="0" stop-color="#fff2a8"/>
+      <stop offset="1" stop-color="#f5a84b"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="2.6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="96" height="96" rx="22" fill="#121419"/>
+  <path d="M18 50c7-23 28-37 53-28 16 18 12 43-8 56-22 6-42-5-45-28Z" fill="none" stroke="url(#core)" stroke-width="3" opacity=".92"/>
+  <path d="M28 26 68 68M18 50h60M30 76 67 22M46 16v64" stroke="url(#core)" stroke-width="1.5" opacity=".65"/>
+  <path d="M49 10 56 40 85 47 56 56 49 86 41 56 12 47 41 40Z" fill="none" stroke="url(#gold)" stroke-width="3" filter="url(#glow)"/>
+  <path d="M15 62c20 9 47 2 65-20M20 68c23 8 47 1 62-16" fill="none" stroke="#70e6ff" stroke-width="3" stroke-linecap="round" opacity=".95" filter="url(#glow)"/>
+  <circle cx="35" cy="42" r="3" fill="#fff6b8"/>
+  <circle cx="44" cy="35" r="3" fill="#b78cff"/>
+  <circle cx="44" cy="50" r="3" fill="#18f5c8"/>
+  <circle cx="54" cy="44" r="3" fill="#ffffff"/>
+  <path d="M35 42h9m0-7v15m0 0 10-6" stroke="#d8fbff" stroke-width="1.7" stroke-linecap="round"/>
+</svg>

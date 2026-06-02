@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>织梦师</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div class="brand-block">
+          <img class="brand-logo" src="/assets/app-logo-cropped.png" alt="织梦师 Logo" />
+          <div class="brand-copy">
+            <div class="brand-meta">
+              <span class="eyebrow">本地版</span>
+              <span class="creator-badge">Created by 开心的熊猫</span>
+            </div>
+            <p class="tagline">为剧本与故事创意生成专业提示词</p>
+          </div>
+        </div>
+        <div id="modelStatus" class="status-pill">正在读取模型设置</div>
+      </header>
+
+      <section class="modelbar">
+        <div>
+          <h2>模型设置</h2>
+          <p id="savedModelNotice" class="saved-model-notice warning">当前未保存 API Key。请选择模型并保存 API Key。</p>
+        </div>
+        <label>
+          模型供应商
+          <select id="provider">
+            <option value="deepseek">DeepSeek</option>
+            <option value="gpt">GPT</option>
+            <option value="gemini">Gemini</option>
+          </select>
+        </label>
+        <label>
+          模型名称
+          <input id="model" type="text" placeholder="deepseek-chat" />
+        </label>
+        <label>
+          API Key
+          <input id="apiKey" type="password" placeholder="API Key 已保存，可重新粘贴覆盖" />
+        </label>
+        <div class="button-row model-actions">
+          <button id="saveSettings" class="primary">保存设置</button>
+          <button id="testModel" type="button">测试连接</button>
+          <button id="clearSettings" type="button">清除 API Key</button>
+        </div>
+        <p id="settingsMessage" class="message"></p>
+      </section>
+
+      <section class="workspace">
+        <section class="panel input-panel">
+          <div class="section-title">
+            <div>
+              <h2>短文本生成</h2>
+              <p class="muted">输入小说、剧本或剧情描述，生成 SEEDANCE 2.0 提示词。</p>
+            </div>
+          </div>
+
+          <div class="mode-grid">
+            <label class="mode-card">
+              <input type="radio" name="mode" value="A" checked />
+              <span>SEEDANCE 2.0 提示词专业版</span>
+              <small>适合快速生成、动作场景、批量分镜思路。</small>
+            </label>
+            <label class="mode-card">
+              <input type="radio" name="mode" value="B" />
+              <span>SEEDANCE 2.0 提示词大师版</span>
+              <small>适合对话场景，会强化人物性格、台词语气、微表情和镜头调度。</small>
+            </label>
+          </div>
+
+          <div class="source-block">
+            <label>
+              输入内容
+              <textarea id="sourceText" maxlength="5000" placeholder="粘贴5000字符以内的小说、剧本或剧情描述"></textarea>
+            </label>
+            <div class="actionbar">
+              <span id="charCount">0 / 5000</span>
+              <div class="button-row">
+                <button id="clearText" type="button">清除输入内容</button>
+                <button id="generate" class="primary" type="button">生成提示词</button>
+              </div>
+            </div>
+            <div id="workingNotice" class="working-notice" hidden>
+              正在调用模型生成提示词，请稍候。复杂对话场景可能需要几十秒。
+            </div>
+          </div>
+
+          <div class="upload-box">
+            <div>
+              <h3>文件批量生成</h3>
+              <p class="muted">支持上传EXCEL分镜表或WORD小说/剧本文档，来批量生成SEEDANCE2.0提示词，并且生成可供下载的WORD提示词文档。</p>
+            </div>
+            <label>
+              选择文件
+              <input id="fileInput" type="file" accept=".xlsx,.docx" />
+            </label>
+            <div class="actionbar">
+              <span id="fileStatus">尚未选择文件</span>
+              <div class="button-row">
+                <button id="clearFile" type="button">清除文件</button>
+                <button id="generateFile" class="primary" type="button">批量生成</button>
+                <button id="downloadFile" type="button" disabled>下载 Word</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel output-panel">
+          <div class="label-row output-head">
+            <div>
+              <h2>输出结果</h2>
+              <p class="muted">生成后可直接复制，批量结果只显示预览。</p>
+            </div>
+            <button id="copyResultInline" type="button">一键复制提示词</button>
+          </div>
+          <textarea id="result" class="result-box" readonly placeholder="生成结果会显示在这里"></textarea>
+          <p id="generateMessage" class="message"></p>
+        </section>
+      </section>
+
+      <footer class="app-footer">
+        <span>织梦师 v1.0.0 · Created by 开心的熊猫</span>
+        <span>API Key 仅保存在用户本地电脑，无云端存储功能，开发日期2026.6.1 · Copyright © 2026 开心的熊猫</span>
+      </footer>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
