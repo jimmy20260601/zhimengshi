@@ -197,13 +197,16 @@ function Get-ProfessionalPromptRules {
 Professional Mode hard storyboard rules:
 - Before writing the final SEEDANCE 2.0 prompt, internally build a complete shot-by-shot storyboard table from the user's source. For Word novel/script documents, the internal storyboard must cover the whole document, not only the first 15 seconds.
 - Each storyboard row must contain: global time range, duration, shot type, camera movement, core action, dialogue if any, character reaction, sound, and whether the row can be grouped with the next row.
-- If the user text or uploaded Word novel/script contains the format "character name + colon", such as "摄政王：" or "王妃（OS/画外音）：", treat the following sentence as spoken dialogue. Do not mistake it for action description. Estimate this dialogue at 3 to 3.5 Chinese characters per second, excluding punctuation and parenthetical speaker notes, then add time for breaths, pauses, facial reaction, key action, camera movement, and listener reaction.
-- If the speaker label contains OS, VO, 画外音, 旁白, or 内心独白, the following sentence is still real voice-over dialogue. It must be counted by Chinese character length and timed at 3 to 3.5 Chinese characters per second. Never treat OS / voice-over as a short sound effect, emotion label, or instant thought.
+- If the user text or uploaded Word novel/script contains the format "character name + colon", such as "摄政王：" or "王妃（OS/画外音）：", treat the following sentence as spoken dialogue. Do not mistake it for action description. Estimate this dialogue at 2.5 to 3 Chinese characters per second, excluding punctuation and parenthetical speaker notes, then add time for breaths, pauses, facial reaction, key action, camera movement, and listener reaction.
+- If the speaker label contains OS, VO, 画外音, 旁白, or 内心独白, the following sentence is still real voice-over dialogue. It must be counted by Chinese character length and timed at 2.5 to 3 Chinese characters per second. Never treat OS / voice-over as a short sound effect, emotion label, or instant thought.
 - Every dialogue line marked by "character name + colon" in the source must appear verbatim in the final professional prompt exactly once, either as spoken dialogue or OS / voice-over. Do not summarize, paraphrase, omit, shorten, merge, or move it only into vague sound design.
 - In the Timeline storyboard section, every segment must explicitly include a dialogue field: write "对白/画外音：原文台词" when there is dialogue, and write "对白/画外音：无台词" when there is no dialogue. The Audio section may repeat sound details, but it cannot be the only place where dialogue appears.
-- If dialogue appears without the clear "character name + colon" format, still estimate speech duration using natural spoken Mandarin pace before assigning shot time. Natural Mandarin dialogue should not be faster than 3.5 Chinese characters per second unless the user explicitly asks for faster speech. If the user explicitly asks for faster speech, use the matching faster pace, but never force a long line into an unrealistically short shot.
+- If dialogue appears without the clear "character name + colon" format, still estimate speech duration using natural spoken Mandarin pace before assigning shot time. Natural Mandarin dialogue should not be faster than 3 Chinese characters per second unless the user explicitly asks for faster speech. If the user explicitly asks for faster speech, use the matching faster pace, but never force a long line into an unrealistically short shot.
 - A shot that contains dialogue must have enough duration for the line to be spoken naturally plus the key action and camera movement in that same shot. Do not create a 4-second shot that requires a character to read a long paragraph.
+- If one complete dialogue line cannot fit naturally inside one short segment, split that dialogue beat into 2 connected shots at a natural semantic pause. The first shot carries the first phrase group and the second shot continues the remaining phrase group. Keep the speaker identity and dialogue continuity clear; do not cut inside a word or unfinished phrase.
 - After estimating the complete storyboard duration, generate prompts by selecting continuous neighboring storyboard shots. Each final professional prompt must be a complete SEEDANCE 2.0 prompt and should be no longer than 15 seconds unless the user's explicit duration rule requires otherwise. If the source is short text but the dialogue-timed storyboard exceeds 15 seconds, output multiple complete professional prompts labeled Prompt 1, Prompt 2, Prompt 3, etc.
+- Each single professional prompt is one SEEDANCE 2.0 video and must end at or before 15 seconds. Never output one prompt with a timeline such as 0-16 seconds, 0-20 seconds, or any internal segment ending after 15 seconds. Split into Prompt 1, Prompt 2, Prompt 3 instead.
+- When splitting, each prompt's internal timeline must restart from 0 seconds. Global source ranges may be shown in the prompt title only; internal storyboard segment times must be 0-15 seconds.
 - Every time segment may keep only one core action. Do not pack multiple important actions into one vague segment.
 - If more than two actions happen inside 4 seconds, split them into shorter shots.
 - Every segment must clearly name a shot type such as 中景, 手部特写, 纸面特写, 反应特写, or 双人压迫构图. Do not omit shot type.
@@ -223,15 +226,16 @@ Master Mode hard dialogue and timing rules:
 - Every master prompt segment must contain both scene/action information and acting/performance information. Do not output only facial details, eyes, tone, or subtext without the concrete scene, position, action, and camera event.
 - Required scene/action coverage for every segment: location, visible characters, shot type, camera movement, composition, character position, one core action, source dialogue or no-dialogue marker, and visible reaction.
 - If the user text or uploaded Word novel/script contains the format "character name + colon", such as "摄政王：" or "王妃（OS/画外音）：", treat the following sentence as spoken dialogue. Do not mistake it for action description, narration, or a short reaction beat.
-- Dialogue marked by "character name + colon" must be timed at 3 to 3.5 Chinese characters per second, excluding punctuation and parenthetical speaker notes. Then add time for breath, semantic pause, emotional turn, eye movement, facial micro-expression, body action, camera movement, and listener reaction.
+- Dialogue marked by "character name + colon" must be timed at 2.5 to 3 Chinese characters per second, excluding punctuation and parenthetical speaker notes. This applies equally to OS, VO, voice-over, narration, and inner monologue lines. Then add time for breath, semantic pause, emotional turn, eye movement, facial micro-expression, body action, camera movement, and listener reaction.
 - A master prompt segment that contains dialogue must be long enough for the line to be spoken naturally plus its performance beat. Never put a long sentence or paragraph into 4 seconds.
+- If one complete dialogue / OS / voice-over line cannot fit naturally inside one short segment, split it into 2 connected adjacent master segments at a natural semantic pause. The first segment carries the first phrase group and the second segment continues the remaining phrase group. Keep the speaker identity, emotional continuity, listener reaction, and visual continuity clear; do not cut inside a word or unfinished phrase.
 - If the complete scene requires more than 15 seconds after dialogue timing is calculated, split it into multiple independent master prompts. Each single master prompt is one SEEDANCE 2.0 video and must be no longer than 15 seconds. Never output one prompt with a 20-second, 25-second, or 40-second duration.
 - When a dialogue line is long enough that grouping it with the previous 1-2 scene beats would make the prompt exceed 15 seconds, make that speaking beat its own independent prompt. The previous actions become the previous prompt; the long speaking beat becomes the next prompt; the following reaction/action beats continue in later prompts as needed.
 - Do not delete, summarize, or silently skip dialogue in order to fit a 15-second prompt. Long dialogue must expand the total duration and create more prompts.
 - Keep dialogue continuity: do not cut inside a phrase, a sentence, or an unfinished meaning. Put shot changes at natural semantic pauses.
 - Every segment must include: 台词, 语气, 关键词发音, 眼神, 表情, 动作/微表演, 潜台词, 听者反应. If a segment has no spoken line, write "台词：无台词，纯反应".
 - Master Mode must prioritize acting direction. Do not collapse several story events into one general 镜头设计 paragraph; important actions and reactions must be placed into timed segments.
-- Before final output, self-check every segment: if a dialogue line needs more time than the segment allows at 3 to 3.5 Chinese characters per second, extend the segment or split the scene into more prompts.
+- Before final output, self-check every segment: if a dialogue line needs more time than the segment allows at 2.5 to 3 Chinese characters per second, extend the segment, split it into 2 connected adjacent master segments, or split the scene into more prompts.
 - Before final output, self-check that the complete professional storyboard skeleton is still present. If any key scene, action, character movement, door/prop action, or source dialogue is missing, rewrite before answering.
 - Before final output, self-check every prompt title and internal segment time range. Each prompt's global duration and each prompt's internal duration must be 15 seconds or less.
 "@
@@ -545,7 +549,7 @@ function Get-ChineseCharacterCount {
 
 function Get-SourceDialogueTimingSummary {
     param([string]$Text)
-    $dialogues = Get-SourceDialogueLines $Text
+    $dialogues = @(Get-SourceDialogueLines $Text)
     if ($dialogues.Count -eq 0) {
         return [pscustomobject]@{
             totalMinimumSeconds = 0.0
@@ -558,7 +562,7 @@ function Get-SourceDialogueTimingSummary {
     for ($i = 0; $i -lt $dialogues.Count; $i++) {
         $dialogue = [string]$dialogues[$i]
         $count = Get-ChineseCharacterCount $dialogue
-        $minimum = if ($count -gt 0) { [Math]::Ceiling(($count / 3.5) * 10) / 10 } else { 0.0 }
+        $minimum = if ($count -gt 0) { [Math]::Ceiling(($count / 3.0) * 10) / 10 } else { 0.0 }
         $total += $minimum
         $items += [pscustomobject]@{
             index = $i + 1
@@ -583,7 +587,7 @@ function Get-DialogueTimingPlan {
 
     $rows = @()
     foreach ($item in $summary.lines) {
-        $rows += ("Dialogue {0}: {1} Chinese characters, minimum speaking time {2} seconds at 3 to 3.5 chars/second. Text: {3}" -f $item.index, $item.chineseChars, (Format-Seconds $item.minimumSeconds), $item.text)
+        $rows += ("Dialogue {0}: {1} Chinese characters, minimum speaking time {2} seconds at 2.5 to 3 chars/second. Text: {3}" -f $item.index, $item.chineseChars, (Format-Seconds $item.minimumSeconds), $item.text)
     }
 
     @"
@@ -601,7 +605,7 @@ function Get-SourceDialogueMinimumSeconds {
 
 function Test-ProfessionalOutputMissingDialogue {
     param([string]$SourceText, [string]$OutputText)
-    $dialogues = Get-SourceDialogueLines $SourceText
+    $dialogues = @(Get-SourceDialogueLines $SourceText)
     if ($dialogues.Count -eq 0) { return $false }
     $normalizedOutput = [regex]::Replace(([string]$OutputText), "\s+", "")
     foreach ($dialogue in $dialogues) {
@@ -616,7 +620,7 @@ function Test-ProfessionalOutputMissingDialogue {
 function New-ProfessionalDialogueCorrectionPrompt {
     param([string]$OriginalPrompt, [string]$BadOutput, [string]$SourceText)
     $professionalRules = Get-ProfessionalPromptRules
-    $dialogues = Get-SourceDialogueLines $SourceText
+    $dialogues = @(Get-SourceDialogueLines $SourceText)
     @"
 The previous professional prompt omitted source dialogue, which is forbidden.
 
@@ -649,6 +653,57 @@ function Test-ProfessionalOutputTooShortForDialogue {
     return ($maxEnd + 0.05) -lt $minimum
 }
 
+function Test-ProfessionalSegmentTooShortForDialogue {
+    param([string]$SourceText, [string]$OutputText)
+    $dialogues = @(Get-SourceDialogueLines $SourceText)
+    if ($dialogues.Count -eq 0) { return $false }
+
+    $text = [string]$OutputText
+    if ([string]::IsNullOrWhiteSpace($text)) { return $false }
+
+    $rangeSep = "(?:-|$([char]0x2014)|$([char]0x2013)|~|$([char]0x81F3)|$([char]0x5230))"
+    $secondUnit = "(?:s|sec|second|seconds|$([char]0x79D2))"
+    $pattern = "(\d+(?:\.\d+)?)\s*$rangeSep\s*(\d+(?:\.\d+)?)\s*$secondUnit"
+    $matches = [regex]::Matches($text, $pattern)
+    if ($matches.Count -eq 0) { return $false }
+
+    $normalizedDialogues = @()
+    foreach ($dialogue in $dialogues) {
+        $normalizedDialogue = [regex]::Replace(([string]$dialogue), '[^\u4e00-\u9fff]', '')
+        if ($normalizedDialogue.Length -gt 0) {
+            $chineseCount = Get-ChineseCharacterCount $dialogue
+            $normalizedDialogues += [pscustomobject]@{
+                text = [string]$dialogue
+                normalized = $normalizedDialogue
+                minimumSeconds = if ($chineseCount -gt 0) { [Math]::Ceiling(($chineseCount / 3.0) * 10) / 10 } else { 0.0 }
+            }
+        }
+    }
+
+    for ($i = 0; $i -lt $matches.Count; $i++) {
+        $m = $matches[$i]
+        $start = [double]$m.Groups[1].Value
+        $end = [double]$m.Groups[2].Value
+        if ($end -le $start) { continue }
+
+        $blockStart = $m.Index
+        $blockEnd = if ($i + 1 -lt $matches.Count) { $matches[$i + 1].Index } else { $text.Length }
+        if ($blockEnd -le $blockStart) { continue }
+
+        $block = $text.Substring($blockStart, $blockEnd - $blockStart)
+        $normalizedBlock = [regex]::Replace($block, '[^\u4e00-\u9fff]', '')
+        $duration = $end - $start
+
+        foreach ($item in $normalizedDialogues) {
+            if ($item.minimumSeconds -gt 0 -and $normalizedBlock.Contains($item.normalized) -and (($duration + 0.05) -lt $item.minimumSeconds)) {
+                return $true
+            }
+        }
+    }
+
+    return $false
+}
+
 function New-ProfessionalDialogueTimingCorrectionPrompt {
     param([string]$OriginalPrompt, [string]$BadOutput, [string]$SourceText)
     $professionalRules = Get-ProfessionalPromptRules
@@ -657,7 +712,9 @@ function New-ProfessionalDialogueTimingCorrectionPrompt {
 The previous professional prompt violated dialogue / voice-over timing.
 
 Hard rule:
-All dialogue and OS / voice-over lines marked by "character name + colon" must be timed at 3 to 3.5 Chinese characters per second, excluding punctuation and parenthetical tone notes. This applies equally to spoken dialogue and OS / voice-over. The final storyboard duration must be longer than the minimum speaking time after adding action, camera movement, pauses, reactions, door/prop actions, and transitions.
+All dialogue and OS / voice-over lines marked by "character name + colon" must be timed at 2.5 to 3 Chinese characters per second, excluding punctuation and parenthetical tone notes. This applies equally to spoken dialogue and OS / voice-over. The final storyboard duration must be longer than the minimum speaking time after adding action, camera movement, pauses, reactions, door/prop actions, and transitions.
+
+If one complete dialogue or voice-over line is too long for one segment, split it into 2 connected adjacent shots at natural semantic pauses. Do not compress a long line into a 2-4 second segment. The first shot carries the first phrase group; the second shot continues the remaining phrase group, while preserving speaker identity and visual continuity.
 
 $dialogueTimingPlan
 
@@ -674,11 +731,96 @@ $BadOutput
 "@
 }
 
+function New-ProfessionalSegmentTimingCorrectionPrompt {
+    param([string]$OriginalPrompt, [string]$BadOutput, [string]$SourceText)
+    $professionalRules = Get-ProfessionalPromptRules
+    $dialogueTimingPlan = Get-DialogueTimingPlan $SourceText
+    @"
+The previous professional prompt placed too much dialogue / voice-over inside a short timed segment.
+
+Hard rule:
+Every single Timeline segment that contains dialogue or OS / voice-over must allow the spoken text to finish at 2.5 to 3 Chinese characters per second, excluding punctuation and parenthetical tone notes. Then add time for the visible core action, camera movement, breath, pause, expression change, and listener reaction.
+
+Segment splitting rule:
+- If a complete dialogue line cannot fit naturally inside one short segment, split that dialogue beat into 2 connected adjacent shots.
+- Split only at a natural semantic pause, never inside a word or unfinished phrase.
+- Keep the same speaker and dialogue continuity clear in both shots.
+- Do not put a long sentence or paragraph into 2, 3, or 4 seconds.
+- Each final SEEDANCE 2.0 prompt must still end at or before 15 seconds. If the corrected timing exceeds 15 seconds, split into Prompt 1, Prompt 2, Prompt 3, etc.
+
+$dialogueTimingPlan
+
+Professional rules:
+$professionalRules
+
+Rewrite the output completely.
+
+Original task:
+$OriginalPrompt
+
+Incorrect previous output:
+$BadOutput
+"@
+}
+
+function Test-ProfessionalPromptOver15Seconds {
+    param([string]$OutputText)
+    $text = [string]$OutputText
+    if ([string]::IsNullOrWhiteSpace($text)) { return $false }
+
+    $hasMultiplePrompts = $text -match "Prompt\s*2|Prompt\s+#?2|提示词\s*2|提示词2"
+    $maxEnd = Get-MaxTimelineEndSecond $text
+    if (-not $hasMultiplePrompts -and $maxEnd -gt 15.05) { return $true }
+
+    $rangeSep = "(?:-|$([char]0x2014)|$([char]0x2013)|~|$([char]0x81F3)|$([char]0x5230))"
+    $secondUnit = "(?:s|sec|second|seconds|$([char]0x79D2))"
+    $pattern = "(\d+(?:\.\d+)?)\s*$rangeSep\s*(\d+(?:\.\d+)?)\s*$secondUnit"
+    $matches = [regex]::Matches($text, $pattern)
+    foreach ($m in $matches) {
+        $start = [double]$m.Groups[1].Value
+        $end = [double]$m.Groups[2].Value
+        if (($end - $start) -gt 15.05) { return $true }
+    }
+
+    return $false
+}
+
+function New-ProfessionalOver15CorrectionPrompt {
+    param([string]$OriginalPrompt, [string]$BadOutput, [string]$SourceText)
+    $professionalRules = Get-ProfessionalPromptRules
+    $dialogueTimingPlan = Get-DialogueTimingPlan $SourceText
+    @"
+The previous professional prompt violated the SEEDANCE 2.0 duration limit.
+
+Hard rule:
+Each single SEEDANCE 2.0 video prompt must be no longer than 15 seconds. Do not output one Timeline storyboard that ends after 15 seconds, such as 13.5-16 seconds. If the full source scene needs more than 15 seconds, split it into multiple complete professional prompts labeled Prompt 1, Prompt 2, Prompt 3, etc.
+
+Splitting rule:
+- Keep each prompt's internal timeline starting at 0 seconds.
+- Each prompt's internal timeline must end at or before 15 seconds.
+- Preserve all source dialogue, OS / voice-over, actions, camera movement, and reactions.
+- If a long dialogue or voice-over beat would make the current prompt exceed 15 seconds, move that beat into the next prompt or make it its own prompt.
+
+$dialogueTimingPlan
+
+Professional rules:
+$professionalRules
+
+Rewrite the output completely.
+
+Original task:
+$OriginalPrompt
+
+Incorrect previous output:
+$BadOutput
+"@
+}
+
 function New-MasterCoverageCorrectionPrompt {
     param([string]$OriginalPrompt, [string]$BadOutput, [string]$SourceText)
     $professionalRules = Get-ProfessionalPromptRules
     $masterRules = Get-MasterPromptRules
-    $dialogues = Get-SourceDialogueLines $SourceText
+    $dialogues = @(Get-SourceDialogueLines $SourceText)
     @"
 The previous master prompt missed required source coverage.
 
@@ -785,11 +927,47 @@ Rules:
 - If there is no dialogue in a segment, write "台词：无台词，纯反应" and still provide tone, eyes, expression, action, subtext, listener reaction.
 - If a character speaks, include keyword delivery for important words.
 - After a speaking line, include the listener's reaction.
-- Preserve the full story coverage, but rebuild timing if the previous output compressed dialogue unrealistically. Dialogue marked by "character name + colon" must follow 3 to 3.5 Chinese characters per second plus performance time.
+- Preserve the full story coverage, but rebuild timing if the previous output compressed dialogue unrealistically. Dialogue marked by "character name + colon" must follow 2.5 to 3 Chinese characters per second plus performance time.
 - Preserve every key scene and action from the Professional Mode skeleton. Do not output only close-up details or performance notes.
 - If a long character speaking beat plus the previous 1-2 scene beats would exceed 15 seconds, put that character speaking beat into its own prompt. Then continue later actions in the next prompt.
 - Every prompt title's global range must be 15 seconds or less. Allowed examples: global 0-12 seconds, 12-24 seconds, 24-36 seconds. Forbidden example: global 20-40 seconds.
 - Each prompt title may keep the global source range, but all internal segment time ranges must start at 0 seconds in that prompt.
+
+Original task:
+$OriginalPrompt
+
+Incorrect previous output:
+$BadOutput
+"@
+}
+
+function New-MasterDialogueTimingCorrectionPrompt {
+    param([string]$OriginalPrompt, [string]$BadOutput, [string]$SourceText)
+    $professionalRules = Get-ProfessionalPromptRules
+    $masterRules = Get-MasterPromptRules
+    $dialogueTimingPlan = Get-DialogueTimingPlan $SourceText
+    @"
+The previous master prompt violated dialogue / OS / voice-over timing.
+
+Hard rule:
+All dialogue, OS, VO, voice-over, narration, and inner monologue lines marked by "character name + colon" must be timed at 2.5 to 3 Chinese characters per second, excluding punctuation and parenthetical tone notes. Then add time for breath, semantic pause, keyword delivery, eye movement, facial micro-expression, body action, camera movement, and listener reaction.
+
+Master segment splitting rule:
+- If one complete dialogue / OS / voice-over line cannot fit naturally inside one short segment, split it into 2 connected adjacent master segments at a natural semantic pause.
+- The first segment carries the first phrase group; the second segment continues the remaining phrase group.
+- Keep the same speaker identity, emotional continuity, visual continuity, and listener reaction clear.
+- Do not put a long sentence or paragraph into 2, 3, or 4 seconds.
+- Each single SEEDANCE 2.0 master prompt must still end at or before 15 seconds. If corrected timing exceeds 15 seconds, split into multiple complete master prompts.
+
+$dialogueTimingPlan
+
+Master Mode rules:
+$masterRules
+
+Professional Mode skeleton rules to preserve:
+$professionalRules
+
+Rewrite the output completely. Preserve the full Professional Mode storyboard skeleton and add Master Mode acting details. Do not output only close-up details or analysis notes.
 
 Original task:
 $OriginalPrompt
@@ -1240,7 +1418,7 @@ Rules:
 - If the selected storyboard rows contain explicit durations, the final prompt duration must equal their total duration. Do not stretch to 12 seconds or 15 seconds.
 - This is one prompt in a batch. The full batch must cover every storyboard row from the Excel file. Do not ignore later rows when the complete video is longer than 15 seconds.
 - If the group duration is over 6 seconds, split the timeline into micro-shots no longer than 4 seconds each.
-- If any row contains dialogue, especially dialogue marked by "character name + colon", check whether the row duration is enough at 3 to 3.5 Chinese characters per second plus key action, camera movement, pauses, and reaction beats. If not enough, split or redistribute the row into more realistic micro-shots while preserving the selected group's total duration.
+- If any row contains dialogue, especially dialogue marked by "character name + colon", check whether the row duration is enough at 2.5 to 3 Chinese characters per second plus key action, camera movement, pauses, and reaction beats. If not enough, split or redistribute the row into more realistic micro-shots while preserving the selected group's total duration.
 - Follow Douyin short drama and YouTube viral short-video rhythm: strong hook, quick visual changes, clear emotional beat, no slow empty shot.
 - Preserve the original storyboard meaning. Do not add unrelated plot.
 - Do not output analysis notes. Do not output Markdown numbering such as "1." or "2.". Output the final prompt only.
@@ -1636,6 +1814,10 @@ function Invoke-FileGeneration {
                 $content = Invoke-AI $Settings (New-MasterCoverageCorrectionPrompt -OriginalPrompt $prompt -BadOutput $content -SourceText $text)
                 $content = Repair-MasterOutput -Settings $Settings -Prompt $prompt -Content $content
             }
+            if ((Test-ProfessionalOutputTooShortForDialogue -SourceText $text -OutputText $content) -or (Test-ProfessionalSegmentTooShortForDialogue -SourceText $text -OutputText $content)) {
+                $content = Invoke-AI $Settings (New-MasterDialogueTimingCorrectionPrompt -OriginalPrompt $prompt -BadOutput $content -SourceText $text)
+                $content = Repair-MasterOutput -Settings $Settings -Prompt $prompt -Content $content
+            }
         }
         if ($mode -eq "A") {
             $explicitTotal = Get-ExplicitTotalSeconds $text
@@ -1650,6 +1832,15 @@ function Invoke-FileGeneration {
             }
             if (Test-ProfessionalOutputTooShortForDialogue -SourceText $text -OutputText $content) {
                 $content = Invoke-AI $Settings (New-ProfessionalDialogueTimingCorrectionPrompt -OriginalPrompt $prompt -BadOutput $content -SourceText $text)
+            }
+            if (Test-ProfessionalSegmentTooShortForDialogue -SourceText $text -OutputText $content) {
+                $content = Invoke-AI $Settings (New-ProfessionalSegmentTimingCorrectionPrompt -OriginalPrompt $prompt -BadOutput $content -SourceText $text)
+            }
+            if (Test-ProfessionalPromptOver15Seconds -OutputText $content) {
+                $content = Invoke-AI $Settings (New-ProfessionalOver15CorrectionPrompt -OriginalPrompt $prompt -BadOutput $content -SourceText $text)
+            }
+            if (Test-ProfessionalSegmentTooShortForDialogue -SourceText $text -OutputText $content) {
+                $content = Invoke-AI $Settings (New-ProfessionalSegmentTimingCorrectionPrompt -OriginalPrompt $prompt -BadOutput $content -SourceText $text)
             }
         }
         $downloadName = Get-DownloadName -FileName $fileName -Mode $mode -Text $text
@@ -1727,6 +1918,10 @@ while ($listener.IsListening) {
                     $content = Invoke-AI $settings (New-MasterCoverageCorrectionPrompt -OriginalPrompt $prompt -BadOutput $content -SourceText $sourceText)
                     $content = Repair-MasterOutput -Settings $settings -Prompt $prompt -Content $content
                 }
+                if ((Test-ProfessionalOutputTooShortForDialogue -SourceText $sourceText -OutputText $content) -or (Test-ProfessionalSegmentTooShortForDialogue -SourceText $sourceText -OutputText $content)) {
+                    $content = Invoke-AI $settings (New-MasterDialogueTimingCorrectionPrompt -OriginalPrompt $prompt -BadOutput $content -SourceText $sourceText)
+                    $content = Repair-MasterOutput -Settings $settings -Prompt $prompt -Content $content
+                }
             }
             if ($mode -eq "A") {
                 $explicitTotal = Get-ExplicitTotalSeconds $sourceText
@@ -1741,6 +1936,15 @@ while ($listener.IsListening) {
                 }
                 if (Test-ProfessionalOutputTooShortForDialogue -SourceText $sourceText -OutputText $content) {
                     $content = Invoke-AI $settings (New-ProfessionalDialogueTimingCorrectionPrompt -OriginalPrompt $prompt -BadOutput $content -SourceText $sourceText)
+                }
+                if (Test-ProfessionalSegmentTooShortForDialogue -SourceText $sourceText -OutputText $content) {
+                    $content = Invoke-AI $settings (New-ProfessionalSegmentTimingCorrectionPrompt -OriginalPrompt $prompt -BadOutput $content -SourceText $sourceText)
+                }
+                if (Test-ProfessionalPromptOver15Seconds -OutputText $content) {
+                    $content = Invoke-AI $settings (New-ProfessionalOver15CorrectionPrompt -OriginalPrompt $prompt -BadOutput $content -SourceText $sourceText)
+                }
+                if (Test-ProfessionalSegmentTooShortForDialogue -SourceText $sourceText -OutputText $content) {
+                    $content = Invoke-AI $settings (New-ProfessionalSegmentTimingCorrectionPrompt -OriginalPrompt $prompt -BadOutput $content -SourceText $sourceText)
                 }
             }
             Write-Json $response 200 @{ ok = $true; content = $content }
