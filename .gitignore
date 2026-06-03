@@ -1,0 +1,37 @@
+# Local secrets and machine-specific settings
+.zhimengshi/
+.yingci/
+settings-ps.json
+*.key
+*.env
+.env
+
+# Build/package outputs
+dist/
+*.zip
+*.rar
+*.7z
+
+# Runtime/temp files
+*.log
+*.tmp
+*.temp
+Thumbs.db
+desktop.ini
+
+# Dependency folders, if future versions add them
+node_modules/
+
+# Generated screenshots, preview frames, and local media captures
+ui-previews/
+video-frames/
+video-frames-play/
+video-frames2/
+
+# Local heavy document exports / manuals
+*.docx
+*.doc
+
+# Editor folders
+.vscode/
+.idea/

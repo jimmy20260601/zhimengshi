@@ -65,7 +65,7 @@ function Read-RequestJson {
         return @{}
     }
     try {
-        $raw | ConvertFrom-Json
+        $raw | ConvertFrom-Json -ErrorAction Stop
     } catch {
         throw "Request JSON parse failed."
     }
@@ -103,6 +103,9 @@ function Write-StaticFile {
     $bytes = [System.IO.File]::ReadAllBytes($FilePath)
     $Response.StatusCode = 200
     $Response.ContentType = $contentType
+    $Response.Headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    $Response.Headers["Pragma"] = "no-cache"
+    $Response.Headers["Expires"] = "0"
     $Response.ContentLength64 = $bytes.Length
     $Response.OutputStream.Write($bytes, 0, $bytes.Length)
     $Response.OutputStream.Close()
